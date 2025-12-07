@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/faranalytics/streams-logger.git"
+    "url": "git+https://github.com/adpatter/streams-logger.git"
   },
   "author": "FAR",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/faranalytics/streams-logger/issues"
+    "url": "https://github.com/adpatter/streams-logger/issues"
   },
-  "homepage": "https://github.com/faranalytics/streams-logger#readme",
+  "homepage": "https://github.com/adpatter/streams-logger#readme",
   "engines": {
     "npm": ">=10.8.2",
     "node": ">=18.20.8"
