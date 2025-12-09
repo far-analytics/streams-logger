@@ -29,7 +29,7 @@ Config.debug = process.argv.some((value: string) => value.search(/verbose=true/)
 
 const DATA = "0123456789";
 
-await suite("Test the integrity of data propagation and error handling.", async () => {
+await suite("Test the integrity of the underlying Node data propagation and error handling.", async () => {
   const temporalNode = new AnyTemporalToAny<string, string>({ time: 0 });
   const stringToBuffer = new StringToBuffer();
   const bufferToString = new BufferToString();
