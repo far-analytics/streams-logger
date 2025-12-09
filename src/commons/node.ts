@@ -56,7 +56,7 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
     });
   }
 
-  public connect(...nodes: Node<OutT, unknown>[]): typeof this {
+  public connect(...nodes: Node<OutT, unknown>[]): this {
     for (const node of nodes) {
       if (this._stream instanceof Readable && node._stream instanceof Writable) {
         this._stream.pipe(node._stream);
@@ -71,7 +71,7 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
     return this;
   }
 
-  public disconnect(...nodes: Node<OutT, unknown>[]): typeof this {
+  public disconnect(...nodes: Node<OutT, unknown>[]): this {
     for (const node of nodes) {
       if (this._stream instanceof Readable && node._stream instanceof Writable) {
         this._stream.unpipe(node._stream);
