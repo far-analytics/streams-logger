@@ -89,10 +89,10 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
 
     if (this._stream.writableNeedDrain) {
       this._queue.push(data);
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       this._size += this._stream.writableObjectMode
         ? 1
-        : ((data as string | Buffer).length ?? (data as DataView).byteLength ?? 0);
+        : // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          ((data as string | Buffer).length ?? (data as DataView).byteLength ?? 0);
       return;
     }
 
@@ -102,10 +102,10 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
 
     while (this._queue.length) {
       const data = this._queue.shift();
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       this._size -= this._stream.writableObjectMode
         ? 1
-        : ((data as string | Buffer).length ?? (data as DataView).byteLength ?? 0);
+        : // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          ((data as string | Buffer).length ?? (data as DataView).byteLength ?? 0);
       if (!this._stream.write(data, encoding ?? "utf-8")) {
         await once(this._stream, "drain");
       }
