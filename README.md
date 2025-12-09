@@ -6,7 +6,7 @@ Streams is an intuitive and performant logger for Node.js _and_ TypeScript appli
 
 <img align="right" src="./graph.png">
 
-_Streams_ is an intuitive logger built on native Node.js streams. You can use the built-in logging components (e.g., the [Logger](#the-logger-class), [Formatter](#the-formatter-class), [Filter](#the-filter-class), [ConsoleHandler](#the-consolehandler-class), [RotatingFileHandler](#the-rotatingfilehandler-class), and [SocketHandler](#the-sockethandler-class)) for [common logging tasks](#usage) or implement your own logging [Node](https://github.com/adpatter/nodes) to handle a wide range of logging scenarios. _Streams_ offers a graph-like API pattern for building sophisticated logging pipelines.
+_Streams_ is an intuitive logger built on native Node.js streams. You can use the built-in logging components (e.g., the [Logger](#the-logger-class), [Formatter](#the-formatter-class), [Filter](#the-filter-class), [ConsoleHandler](#the-consolehandler-class), [RotatingFileHandler](#the-rotatingfilehandler-class), and [SocketHandler](#the-sockethandler-class)) for [common logging tasks](#usage) or implement your own logging [Node](#how-to-implement-a-custom-streams-data-transformation-node) to handle a wide range of logging scenarios. _Streams_ offers a graph-like API pattern for building sophisticated logging pipelines.
 
 ### Features
 
@@ -50,7 +50,7 @@ Logging is essentially a data transformation task. When a string is logged to th
 
 ### Node
 
-Each data transformation step in a _Streams_ logging graph is realized through a [`Node`](https://github.com/adpatter/nodes) implementation. Each `Node` manages and represents a native Node.js stream. A `Node` in a data transformation graph consumes an input, transforms or filters the data in some way, and optionally produces an output. Each component (e.g., Loggers, Formatters, Filters, Handlers, etc.) in a _Streams_ logging graph _is a_ `Node`. Each `Node` _has a_ native Node.js stream that it manages.
+Each data transformation step in a _Streams_ logging graph is realized through a `Node` implementation. Each `Node` manages and represents a native Node.js stream. A `Node` in a data transformation graph consumes an input, transforms or filters the data in some way, and optionally produces an output. Each component (e.g., Loggers, Formatters, Filters, Handlers, etc.) in a _Streams_ logging graph _is a_ `Node`. Each `Node` _has a_ native Node.js stream that it manages.
 
 ### Graph API pattern
 
@@ -91,7 +91,7 @@ const rotatingFileHandler = new RotatingFileHandler({
 
 Connect the Logger to the Formatter and connect the Formatter to the ConsoleHandler and RotatingFileHandler.
 
-_Streams_ uses a graph-like API pattern in order to construct a network of log Nodes. Each component in a network, in this case the `Logger`, the `Formatter`, and the `ConsoleHandler` and `RotatingFileHandler`, _is a_ [Node](https://github.com/adpatter/nodes).
+_Streams_ uses a graph-like API pattern in order to construct a network of Nodes for your logging task. Each component in a network, in this case the `Logger`, the `Formatter`, and the `ConsoleHandler` and `RotatingFileHandler`, _is a_ Node.
 
 ```ts
 const log = logger.connect(formatter.connect(consoleHandler, rotatingFileHandler));
@@ -672,7 +672,7 @@ root.connect(formatter.connect(consoleHandler));
 
 ### How to implement a custom _Streams_ data transformation node
 
-_Streams_ is built on the type-safe [Nodes](https://github.com/adpatter/nodes) graph API framework. This means that any Nodes `Node` may be incorporated into your logging graph provided that it meets the contextual type requirements. In order to implement a _Streams_ data transformation `Node`, subclass the `Node` class, and provide the appropriate _Streams_ defaults to the stream constructor.
+_Streams_ is built on a type-safe graph API framework. Each component of a _Streams_ logging graph _is a_ `Node` instance.This means that any `Node` may be incorporated into your logging graph provided that it meets the contextual type requirements. In order to implement a _Streams_ data transformation `Node`, subclass the `Node` class, and provide the appropriate _Streams_ defaults to the stream constructor.
 
 For example, the somewhat contrived `LogContextToBuffer` implementation transforms the `message` contained in a `LogContext` to a `Buffer`; the graph pipeline streams the message to `process.stdout`.
 
