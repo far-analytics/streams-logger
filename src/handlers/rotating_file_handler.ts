@@ -68,6 +68,7 @@ export class RotatingFileHandlerTransform<MessageT> extends stream.Transform {
       autoClose: true,
       flags,
     });
+    this[$writeStream].on("error", Config.errorHandler);
     this.pipe(this[$writeStream]);
     once(this[$writeStream], "ready")
       .then(() => {
@@ -151,6 +152,7 @@ export class RotatingFileHandlerTransform<MessageT> extends stream.Transform {
       autoClose: true,
       flags: "w",
     });
+    this[$writeStream].on("error", Config.errorHandler);
     await once(this[$writeStream], "ready");
     this.pipe(this[$writeStream]);
     this.uncork();
