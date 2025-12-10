@@ -42,20 +42,20 @@ class Config extends EventEmitter<ConfigEvents> {
 
   public getWritableOptions = (objectMode = true): stream.WritableOptions => {
     return {
-      highWaterMark: objectMode ? this._highWaterMarkObjectMode : this.highWaterMark,
+      highWaterMark: objectMode ? this.highWaterMarkObjectMode : this.highWaterMark,
     };
   };
 
   public getReadableOptions = (objectMode = true): stream.ReadableOptions => {
     return {
-      highWaterMark: objectMode ? this._highWaterMarkObjectMode : this.highWaterMark,
+      highWaterMark: objectMode ? this.highWaterMarkObjectMode : this.highWaterMark,
     };
   };
 
   public getDuplexOptions = (writableObjectMode = true, readableObjectMode = true): stream.DuplexOptions => {
     return {
-      writableHighWaterMark: writableObjectMode ? this._highWaterMarkObjectMode : this.highWaterMark,
-      readableHighWaterMark: readableObjectMode ? this._highWaterMarkObjectMode : this.highWaterMark,
+      writableHighWaterMark: writableObjectMode ? this.highWaterMarkObjectMode : this.highWaterMark,
+      readableHighWaterMark: readableObjectMode ? this.highWaterMarkObjectMode : this.highWaterMark,
     };
   };
 
