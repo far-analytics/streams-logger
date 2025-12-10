@@ -46,7 +46,7 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
       });
     }
 
-    this._stream.once("error", (err: Error) => {
+    this._stream.on("error", (err: Error) => {
       if (Config.debug && this._errorHandler) {
         this._errorHandler(err);
       }
