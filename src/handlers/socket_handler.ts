@@ -45,13 +45,18 @@ export class SocketHandler<MessageT = string> extends Node<
             callback: stream.TransformCallback
           ) => {
             try {
-              if (this._socket.closed) {
-                callback(this._socket.errored ?? new Error("The `Socket` closed."));
+              if (
+                this._socket.destroyed ||
+                this._socket.writableEnded ||
+                this._socket.writableFinished ||
+                this._socket.closed
+              ) {
+                callback(this._socket.errored ?? new Error("The `Socket` is not writable."));
                 return;
               }
               if (SyslogLevel[logContext.level] <= this.level) {
                 const data = this._serializeMessage(logContext);
-                if (data.length == 0){
+                if (data.length == 0) {
                   callback();
                   return;
                 }
@@ -93,8 +98,13 @@ export class SocketHandler<MessageT = string> extends Node<
   }
 
   protected _push = (): void => {
-    if (this._ingressQueue.length > 6) {
+    if (this._ingressQueue.length >= 6) {
       this._messageSize = this._ingressQueue.readUintBE(0, 6);
+      if (this._messageSize == 6) {
+        this._ingressQueue = this._ingressQueue.subarray(6);
+        this._push();
+        return;
+      }
     } else {
       this._socket.once("data", () => {
         this._push();
