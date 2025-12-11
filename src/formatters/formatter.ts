@@ -2,7 +2,7 @@ import * as stream from "node:stream";
 import { LogContext } from "../commons/log_context.js";
 import { Node } from "../commons/node.js";
 import { SyslogLevelT } from "../commons/syslog.js";
-import { Config } from "../index.js";
+import Config from "../commons/config.js";
 
 export interface FormatterOptions<MessageInT, MessageOutT> {
   format: (record: LogContext<MessageInT, SyslogLevelT>) => Promise<MessageOutT> | MessageOutT;
