@@ -1,6 +1,5 @@
 import { Readable, Writable } from "node:stream";
 import Config from "./config.js";
-import { ErrorHandler } from "./config.js";
 import * as crypto from "node:crypto";
 import { race } from "./utils.js";
 
@@ -8,7 +7,6 @@ const $streams = Symbol("nodes");
 
 export interface NodeOptions {
   id: string;
-  errorHandler?: ErrorHandler;
 }
 
 export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Readable> {
@@ -18,14 +16,12 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
   protected _queue: InT[];
   protected _size: number;
   protected _id: string;
-  protected _errorHandler?: ErrorHandler;
 
   constructor(stream: StreamT, options?: NodeOptions) {
     this._stream = stream;
     this._queue = [];
     this._size = 0;
     this._id = options?.id ?? crypto.randomUUID();
-    this._errorHandler = options?.errorHandler ?? Config.errorHandler;
 
     Node[$streams].add(stream);
 
@@ -47,9 +43,7 @@ export class Node<InT, OutT, StreamT extends Writable | Readable = Writable | Re
     }
 
     this._stream.on("error", (err: Error) => {
-      if (Config.debug && this._errorHandler) {
-        this._errorHandler(err);
-      }
+      Config.errorHandler(err);
       if (this._stream instanceof Readable) {
         this._stream.unpipe();
       }
