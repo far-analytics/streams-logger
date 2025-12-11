@@ -25,6 +25,7 @@ import { StringToBuffer } from "./string_to_buffer.js";
 import { BufferToString } from "./buffer_to_string.js";
 import { NodeSocketHandler } from "./node_socket_handler.js";
 
+
 Config.debug = process.argv.some((value: string) => value.search(/verbose=true/) == 0);
 
 const DATA = "0123456789";
@@ -59,7 +60,7 @@ await suite("Test the integrity of the underlying Node data propagation and erro
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const anyToThrow = new AnyTransformToAny<any, any>({
       transform: () => {
-        throw Error("AnyToThrow Error");
+        throw Error("AnyToThrow Error *** This is a simulated Error ***");
       },
     });
     const anyToVoid = new AnyToVoid();
@@ -177,7 +178,7 @@ await suite("Log a string that passes through a SocketHandler.", async () => {
       const greeting = "Hello, World!";
       const anyToThrow = new AnyTransformToAny<LogContext<string, SyslogLevelT>, LogContext<string, SyslogLevelT>>({
         transform: () => {
-          throw Error("AnyToThrow Error");
+          throw Error("AnyToThrow Error *** This is a simulated Error ***");
         },
       });
       const anyToVoid = new AnyToVoid();
