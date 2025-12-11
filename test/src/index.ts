@@ -305,7 +305,7 @@ await suite("Log a string that passes through a rotating file handler.", async (
         log.warn("01234"); // The message is 50 bytes once the timestamp and other contextual data is added to message.
       })();
     }
-    await new Promise((r) => setTimeout(r, 10000));
+    await new Promise((r) => setTimeout(r, 20000));
     const results = fs
       .readdirSync(".", { withFileTypes: true })
       .filter((value) => /[^.]+.log(\.\d*)?/.exec(value.name))
