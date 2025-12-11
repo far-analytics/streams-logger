@@ -6,7 +6,7 @@ import { once } from "node:events";
 import { LogContext } from "../commons/log_context.js";
 import { Node } from "../commons/node.js";
 import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
-import { Config } from "../index.js";
+import Config from "../commons/config.js";
 
 export const $rotate = Symbol("rotate");
 export const $option = Symbol("option");

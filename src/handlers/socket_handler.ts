@@ -3,7 +3,7 @@ import * as stream from "node:stream";
 import { LogContext } from "../commons/log_context.js";
 import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
 import { Node } from "../commons/node.js";
-import { Config } from "../index.js";
+import Config from "../commons/config.js";
 
 export interface SocketHandlerOptions {
   socket: net.Socket;

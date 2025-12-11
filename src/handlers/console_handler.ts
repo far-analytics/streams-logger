@@ -3,7 +3,7 @@ import { once } from "node:events";
 import { Node } from "../commons/node.js";
 import { LogContext } from "../commons/log_context.js";
 import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
-import { Config } from "../index.js";
+import Config from "../commons/config.js";
 
 export const $level = Symbol("option");
 
