@@ -11,6 +11,7 @@ export interface SocketHandlerOptions {
   replacer?: (this: unknown, key: string, value: unknown) => unknown;
   space?: string | number;
   level?: SyslogLevel;
+  payloadSizeLimit?: number;
 }
 
 export class SocketHandler<MessageT = string> extends Node<
@@ -25,9 +26,10 @@ export class SocketHandler<MessageT = string> extends Node<
   protected _socket: net.Socket;
   protected _ingressQueue: Buffer;
   protected _messageSize: number | null;
+  protected _payloadSizeLimit: number;
 
   constructor(
-    { socket, reviver, replacer, space, level = SyslogLevel.WARN }: SocketHandlerOptions,
+    { socket, reviver, replacer, space, level = SyslogLevel.WARN, payloadSizeLimit = 1e6 }: SocketHandlerOptions,
     streamOptions?: stream.DuplexOptions
   ) {
     super(
@@ -88,6 +90,7 @@ export class SocketHandler<MessageT = string> extends Node<
     this._space = space;
     this._ingressQueue = Buffer.allocUnsafe(0);
     this._messageSize = null;
+    this._payloadSizeLimit = payloadSizeLimit;
     this._socket = socket;
     if (this._socket.listeners("error").length == 0) {
       this._socket.on("error", Config.errorHandler);
@@ -100,6 +103,10 @@ export class SocketHandler<MessageT = string> extends Node<
   protected _push = (): void => {
     if (this._ingressQueue.length >= 6) {
       this._messageSize = this._ingressQueue.readUintBE(0, 6);
+      if (this._messageSize - 6 > this._payloadSizeLimit) {
+        this._stream.destroy(new Error("The payload size limit (payloadSizeLimit) was exceeded."));
+        return;
+      }
       if (this._messageSize == 6) {
         this._ingressQueue = this._ingressQueue.subarray(6);
         this._push();
