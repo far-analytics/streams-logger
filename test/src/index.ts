@@ -25,7 +25,6 @@ import { StringToBuffer } from "./string_to_buffer.js";
 import { BufferToString } from "./buffer_to_string.js";
 import { NodeSocketHandler } from "./node_socket_handler.js";
 
-
 Config.debug = process.argv.some((value: string) => value.search(/verbose=true/) == 0);
 
 const DATA = "0123456789";
@@ -122,7 +121,7 @@ await suite("Log a string that passes through a SocketHandler.", async () => {
   const formatterNode = serverFormatter.connect(serverRotatingFileHandler);
   const server = net
     .createServer((socket: net.Socket) => {
-      const socketHandler = new SocketHandler({ socket });
+      const socketHandler = new SocketHandler({ socket, payloadSizeLimit: 1e8 });
       socketHandler.connect(formatterNode.connect(socketHandler));
     })
     .listen(3000);
@@ -135,7 +134,7 @@ await suite("Log a string that passes through a SocketHandler.", async () => {
   });
   const filter = new Filter({ filter: (logContext: LogContext<string, SyslogLevelT>) => logContext.name == "main" });
   await once(socket, "connect");
-  const socketHandler = new SocketHandler({ socket });
+  const socketHandler = new SocketHandler({ socket, payloadSizeLimit: 1e8 });
   const log = logger.connect(formatter.connect(filter.connect(socketHandler.connect(anyToEmitter))));
 
   await test("Log `Hello, World!` and assert that it passed through the graph.", async () => {
@@ -230,7 +229,7 @@ await suite("Log an object that passes through a SocketHandler.", async () => {
   const formatterNode = serverFormatter.connect(serverRotatingFileHandler);
   const server = net
     .createServer((socket: net.Socket) => {
-      const socketHandler = new SocketHandler<Greeter>({ socket });
+      const socketHandler = new SocketHandler<Greeter>({ socket, payloadSizeLimit: 1e8 });
       socketHandler.connect(formatterNode, socketHandler);
     })
     .listen(3000);
@@ -251,7 +250,7 @@ await suite("Log an object that passes through a SocketHandler.", async () => {
       return message;
     },
   });
-  const socketHandler = new SocketHandler<Greeter>({ socket });
+  const socketHandler = new SocketHandler<Greeter>({ socket, payloadSizeLimit: 1e8 });
   const log = logger.connect(formatter.connect(socketHandler.connect(anyToAnyEmitter)));
 
   await test("Log a `Greeter` object and assert that it passed through the graph.", async () => {
