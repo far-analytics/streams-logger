@@ -640,7 +640,7 @@ _Streams_ uses Node.js streams for message propagation. Node.js represents socke
 
 ### Payload size limit
 
-_Streams_ enforces a size limit on the serialized message payload. You can specify a restrictive payload size limit in the `SocketHandlerOptions` passed to the constructor of the `SocketHandler`. The default is `1e6` bytes.
+_Streams_ enforces a size limit on the serialized message payload. You can specify a restrictive `payloadSizeLimit` in the `SocketHandlerOptions` passed to the constructor of the `SocketHandler`. The default is `1e6` bytes.
 
 ### Security
 
