@@ -2,6 +2,16 @@ import * as pth from "node:path";
 import { KeysUppercase } from "./types.js";
 import { SyslogLevelT } from "./syslog.js";
 
+const BASE_POSIX_REGEX =
+  /\s+at\s+(?:(?<func>[A-Za-z_$][A-Za-z0-9_$<>.]*)\s*\()?(?<url>(?:file:\/\/|\/)(?<path>.+?)):(?<line>\d+):(?<col>\d+)\)?/;
+const BASE_WIN32_REGEX =
+  /\s+at\s+(?:(?<func>[A-Za-z_$][A-Za-z0-9_$<>.]*)\s*\()?(?<url>(?:file:\/\/\/[A-Za-z]:|[A-Za-z]:\\)(?<path>.+?)):(?<line>\d+):(?<col>\d+)\)?/;
+
+const REGEX =
+  process.platform === "win32"
+    ? RegExp(/^[^\n]*\n[^\n]*\n/.source + BASE_WIN32_REGEX.source)
+    : RegExp(/^[^\n]*\n[^\n]*\n/.source + BASE_POSIX_REGEX.source);
+
 export interface LogContextOptions<MessageT = string, LevelT = SyslogLevelT> {
   message: MessageT;
   name?: string;
@@ -72,14 +82,15 @@ export class LogContext<MessageT, LevelT> implements LogContextOptions<MessageT,
 
   public parseStackTrace = (depth?: number): void => {
     if (this.capture?.stack) {
-      const regex = depth
-        ? RegExp(
-            `^${"[^\\n]*\\n".repeat(
-              depth
-            )}\\s+at (?<func>[^\\s]+)?.*?(?<url>(?:file://|/)(?<path>[^:]+)):(?<line>\\d+):(?<col>\\d+)`,
-            "is"
-          )
-        : /^[^\n]*\n[^\n]*\n\s+at (?:(?<func>[a-zA-Z_$][a-zA-Z0-9_$<>.]+)(?=.*?file:\/\/))?.*?(?<url>(?:file:\/\/|\/)(?<path>[^:]+)):(?<line>\d+):(?<col>\d+)/;
+      let regex;
+      if (depth) {
+        regex =
+          process.platform === "win32"
+            ? RegExp(RegExp("[^\\n]*\\n".repeat(depth), "is").source + BASE_WIN32_REGEX.source)
+            : RegExp(RegExp("[^\\n]*\\n".repeat(depth), "is").source + BASE_POSIX_REGEX.source);
+      } else {
+        regex = REGEX;
+      }
       const match = this.capture.stack.match(regex);
       const groups = match?.groups;
       if (groups) {
