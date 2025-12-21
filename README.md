@@ -735,7 +735,7 @@ const socketHandler = new Node<Buffer, Buffer>(socket); // Connect this `Node` t
 
 ## Tuning
 
-**Depending on your requirements, the defaults may be fine.** However, for high throughput logging applications you may choose to adjust the `highWaterMark`, disconnect your `Logger` from the root `Logger`, and/or disable stack trace capturing.
+**Depending on your requirements, the defaults may be fine.** However, for high throughput logging applications you may choose to adjust the `highWaterMark` and/or disable stack trace capturing.
 
 ### Tune the highWaterMark
 
@@ -772,22 +772,6 @@ Alternatively, you can instantiate a `Logger` with stack trace capturing disable
 const logger = new Logger({ captureStackTrace: false });
 ```
 
-### Disconnect from root
-
-You can optionally disconnect your `Logger` from the root `Logger` or a specified antecedent. This will prevent message propagation to the root logger, which will provide cost savings and isolation. You can either set the `parent` parameter to `null` in the constructor of the `Logger` or explicitly disconnect from the root `Logger` using the `disconnect` method of the `Logger` instance. In this example the `Logger` instance is disconnected from the _Streams_ root logger after instantiation.
-
-```ts
-import * as streams from 'streams-logger';
-...
-const log = logger.connect(
-    formatter.connect(
-        consoleHandler
-    )
-);
-
-log.disconnect(streams.root);
-```
-
 ### Putting it all together
 
 If you have a high throughput logging application, the following settings should get you to where you want to be while keeping Node.js stream buffers in check.
@@ -798,7 +782,7 @@ import * as streams from 'streams-logger';
 streams.Config.highWaterMark = 1e5;
 streams.Config.highWaterMarkObjectMode = 1e5;
 
-const logger = new Logger({ parent: null, captureStackTrace: false });
+const logger = new Logger({ captureStackTrace: false });
 
 ... // Create an instance of a `Formatter` and `ConsoleHandler`.
 
