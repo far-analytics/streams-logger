@@ -12,6 +12,7 @@ export interface SocketHandlerOptions {
   space?: string | number;
   level?: SyslogLevel;
   payloadSizeLimit?: number;
+  ingressQueueThreshold?: number;
 }
 
 export class SocketHandler<MessageT = string> extends Node<
@@ -25,11 +26,19 @@ export class SocketHandler<MessageT = string> extends Node<
   protected _reviver?: (this: unknown, key: string, value: unknown) => unknown;
   protected _socket: net.Socket;
   protected _ingressQueue: Buffer;
-  protected _messageSize: number | null;
   protected _payloadSizeLimit: number;
+  protected _ingressQueueThreshold?: number;
 
   constructor(
-    { socket, reviver, replacer, space, level = SyslogLevel.WARN, payloadSizeLimit = 1e6 }: SocketHandlerOptions,
+    {
+      socket,
+      reviver,
+      replacer,
+      space,
+      level = SyslogLevel.WARN,
+      payloadSizeLimit = 1e6,
+      ingressQueueThreshold,
+    }: SocketHandlerOptions,
     streamOptions?: stream.DuplexOptions
   ) {
     super(
@@ -89,47 +98,66 @@ export class SocketHandler<MessageT = string> extends Node<
     this._replacer = replacer;
     this._space = space;
     this._ingressQueue = Buffer.allocUnsafe(0);
-    this._messageSize = null;
     this._payloadSizeLimit = payloadSizeLimit;
+    this._ingressQueueThreshold = ingressQueueThreshold;
     this._socket = socket;
     if (this._socket.listeners("error").length == 0) {
       this._socket.on("error", Config.errorHandler);
     }
     this._socket.on("data", (data: Buffer) => {
       this._ingressQueue = Buffer.concat([this._ingressQueue, data]);
+      if (this._ingressQueueThreshold && this._ingressQueue.length > this._ingressQueueThreshold) {
+        this._socket.pause();
+      }
     });
   }
 
   protected _push = (): void => {
-    if (this._ingressQueue.length >= 6) {
-      this._messageSize = this._ingressQueue.readUintBE(0, 6);
-      if (this._messageSize - 6 > this._payloadSizeLimit) {
-        this._stream.destroy(new Error("The payload size limit (payloadSizeLimit) was exceeded."));
-        return;
+    if (this._socket.isPaused()) {
+      if (this._ingressQueueThreshold) {
+        if (this._ingressQueue.length < this._ingressQueueThreshold) {
+          this._socket.resume();
+        }
+      } else {
+        this._socket.resume();
       }
-      if (this._messageSize == 6) {
-        this._ingressQueue = this._ingressQueue.subarray(6);
-        this._push();
-        return;
-      }
-    } else {
-      this._socket.once("data", () => {
-        this._push();
-      });
+    }
+    if (this._ingressQueue.length < 6) {
+      this._socket.once("data", this._push);
       return;
     }
-    if (this._ingressQueue.length >= this._messageSize) {
-      const buf = this._ingressQueue.subarray(6, this._messageSize);
-      this._ingressQueue = this._ingressQueue.subarray(this._messageSize, this._ingressQueue.length);
-      const message = this._deserializeMessage(buf);
-      if (this._stream instanceof stream.Readable) {
-        this._stream.push(message);
-      }
-    } else {
-      this._socket.once("data", () => {
-        this._push();
-      });
+    const messageSize = this._ingressQueue.readUintBE(0, 6);
+    if (messageSize < 6) {
+      this._stream.destroy(new Error(`The frame length is invalid: ${messageSize.toString()}`));
       return;
+    }
+    if (this._ingressQueueThreshold && messageSize > this._ingressQueueThreshold) {
+      this._stream.destroy(
+        new Error(`The message size exceeded the ingress queue threshold: ${this._ingressQueueThreshold.toString()}`)
+      );
+      return;
+    }
+    if (this._ingressQueue.length < messageSize) {
+      this._socket.once("data", this._push);
+      return;
+    }
+    if (messageSize == 6) {
+      this._ingressQueue = this._ingressQueue.subarray(6);
+      this._push();
+      return;
+    }
+    if (messageSize - 6 > this._payloadSizeLimit) {
+      this._stream.destroy(new Error(`The payload size limit was exceeded: ${this._payloadSizeLimit.toString()}`));
+      return;
+    }
+    const buf = this._ingressQueue.subarray(6, messageSize);
+    this._ingressQueue = this._ingressQueue.subarray(messageSize, this._ingressQueue.length);
+    const message = this._deserializeMessage(buf);
+    if (this._stream instanceof stream.Readable) {
+      if (!this._stream.push(message)) {
+        this._socket.pause();
+        return;
+      }
     }
   };
 
