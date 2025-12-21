@@ -122,7 +122,7 @@ export class RotatingFileHandlerTransform<MessageT> extends stream.Transform {
     this[$writeStream].close();
     await once(this[$writeStream], "close");
     if (this[$rotationLimit] === 0) {
-      await fsp.rm(this[$path]);
+      await fsp.rm(this[$path], { force: true });
     } else {
       for (let i = this[$rotationLimit] - 1; i >= 0; i--) {
         let path;
@@ -134,7 +134,9 @@ export class RotatingFileHandlerTransform<MessageT> extends stream.Transform {
         try {
           const stats = await fsp.stat(path);
           if (stats.isFile()) {
-            await fsp.rename(path, `${this[$path]}.${(i + 1).toString()}`);
+            const newPath = `${this[$path]}.${(i + 1).toString()}`;
+            await fsp.rm(newPath, { force: true });
+            await fsp.rename(path, newPath);
           }
         } catch (err) {
           const error = err instanceof Error ? err : new Error(String(err));
