@@ -261,60 +261,62 @@ await suite("Log an object that passes through a SocketHandler.", async () => {
     assert.strictEqual((await result)[0].message.greeting, greeter.greeting);
   });
 
-  await test("Log a `Greeter` object and assert that the anonymous arrow function name was captured.", async () => {
-    const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
-    (() => {
-      log.warn(greeter);
-    })();
-    assert.strictEqual((await result)[0].func, undefined);
-  });
+  await suite("Test stack trace parsing.", async () => {
+    await test("Log a `Greeter` object and assert that the anonymous arrow function name was captured.", async () => {
+      const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
+      (() => {
+        log.warn(greeter);
+      })();
+      assert.strictEqual((await result)[0].func, undefined);
+    });
 
-  await test("Log a `Greeter` object and assert that anonymous function name was captured.", async () => {
-    const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
-    (function () {
-      log.warn(greeter);
-    })();
-    assert.strictEqual((await result)[0].func, undefined);
-  });
+    await test("Log a `Greeter` object and assert that anonymous function name was captured.", async () => {
+      const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
+      (function () {
+        log.warn(greeter);
+      })();
+      assert.strictEqual((await result)[0].func, undefined);
+    });
 
-  await test("Log a `Greeter` object and assert that the function name was captured.", async () => {
-    const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
-    (function sayHello() {
-      log.warn(greeter);
-    })();
-    assert.strictEqual((await result)[0].func, "sayHello");
-  });
+    await test("Log a `Greeter` object and assert that the function name was captured.", async () => {
+      const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
+      (function sayHello() {
+        log.warn(greeter);
+      })();
+      assert.strictEqual((await result)[0].func, "sayHello");
+    });
 
-  await test("Log a `Greeter` object and assert that the arrow function name was captured.", async () => {
-    const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
-    const sayHello = () => {
-      log.warn(greeter);
-    };
-    sayHello();
-    assert.strictEqual((await result)[0].func, "sayHello");
-  });
+    await test("Log a `Greeter` object and assert that the arrow function name was captured.", async () => {
+      const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
+      const sayHello = () => {
+        log.warn(greeter);
+      };
+      sayHello();
+      assert.strictEqual((await result)[0].func, "sayHello");
+    });
 
-  await test("Log a `Greeter` object and assert that the async function name was captured.", async () => {
-    const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
-    (async function sayHello() {
-      await new Promise((r) => {
-        setTimeout(r, 100);
-      });
-      log.warn(greeter);
-    })().catch(() => null);
-    assert.strictEqual((await result)[0].func, "sayHello");
-  });
+    await test("Log a `Greeter` object and assert that the async function name was captured.", async () => {
+      const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
+      (async function sayHello() {
+        await new Promise((r) => {
+          setTimeout(r, 100);
+        });
+        log.warn(greeter);
+      })().catch(() => null);
+      assert.strictEqual((await result)[0].func, "sayHello");
+    });
 
-  await test("Log a `Greeter` object and assert that the async arrow function name was captured.", async () => {
-    const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
-    const sayHello = async () => {
-      await new Promise((r) => {
-        setTimeout(r, 100);
-      });
-      log.warn(greeter);
-    };
-    sayHello().catch(() => null);
-    assert.strictEqual((await result)[0].func, "sayHello");
+    await test("Log a `Greeter` object and assert that the async arrow function name was captured.", async () => {
+      const result = once(anyToAnyEmitter.emitter, "data") as Promise<LogContext<{ greeting: string }, SyslogLevelT>[]>;
+      const sayHello = async () => {
+        await new Promise((r) => {
+          setTimeout(r, 100);
+        });
+        log.warn(greeter);
+      };
+      sayHello().catch(() => null);
+      assert.strictEqual((await result)[0].func, "sayHello");
+    });
   });
 
   after(async () => {
