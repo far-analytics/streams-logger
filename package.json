@@ -2,16 +2,30 @@
   "name": "streams-logger",
   "version": "2.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./build/cjs/dist/index.js",
+  "type": "module",
+  "types": "./build/esm/dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./build/esm/dist/index.js",
+      "require": "./build/cjs/dist/index.js",
+      "types": "./build/esm/dist/index.d.ts"
+    }
+  },
   "scripts": {
-    "clean": "rm -rf ./dist/*",
-    "build": "tsc --build .",
+    "clean": "rm -rf ./build/cjs/dist/* && rm -rf ./build/esm/dist/*",
+    "mark-cjs": "node -e \"const fs=require('node:fs'); fs.writeFileSync('build/cjs/dist/package.json', JSON.stringify({type:'commonjs'}));\"",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && npm run mark-cjs",
+    "build": "npm run build:esm && npm run build:cjs",
     "clean:build": "npm run clean && npm run build",
     "watch": "tsc --watch",
     "lint": "npx eslint .",
     "format": "npx prettier --write .",
     "format:lint": "npm run format && npm run lint",
-    "test": "npm update && npm run clean:build && npm update --prefix ./test && npm run clean:build --prefix ./test && npm start --prefix ./test"
+    "test:esm": "npm run clean:build && npm install --prefix ./test && npm run clean:build --prefix ./test && npm run test:esm --prefix ./test",
+    "test:cjs": "npm run clean:build && npm install --prefix ./test && npm run clean:build --prefix ./test && npm run test:cjs --prefix ./test",
+    "test": "npm run test:esm"
   },
   "repository": {
     "type": "git",

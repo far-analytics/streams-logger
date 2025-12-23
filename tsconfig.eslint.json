@@ -5,5 +5,13 @@
     "allowJs": true
   },
   "extends": "./tsconfig.json",
-  "include": ["examples/**/*.ts", "examples/**/*.js", "test/**/*.ts", "test/**/*.js", "eslint.config.mjs"]
+  "include": [
+    "examples/**/*.ts",
+    "examples/**/*.js",
+    "test/**/*.ts",
+    "test/**/*.js",
+    "test/**/*.mjs",
+    "test/**/*.cjs",
+    "eslint.config.mjs"
+  ]
 }
