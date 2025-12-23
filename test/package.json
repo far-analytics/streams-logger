@@ -2,23 +2,12 @@
   "name": "test",
   "version": "1.0.0",
   "description": "",
-  "main": "./build/cjs/dist/index.js",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./build/esm/dist/index.js",
-      "require": "./build/cjs/dist/index.js"
-    }
-  },
+  "main": "./dist/index.js",
   "scripts": {
-    "clean": "rm -rf ./build/cjs/dist/* && rm -rf ./build/esm/dist/*",
-    "mark-cjs": "node -e \"const fs=require('node:fs'); fs.writeFileSync('build/cjs/dist/package.json', JSON.stringify({type:'commonjs'}));\"",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && npm run mark-cjs",
-    "build": "npm run build:esm && npm run build:cjs",
+    "build": "tsc --build .",
+    "clean": "rm -rf ./dist/*",
     "clean:build": "npm run clean && npm run build",
-    "test:esm": "node --expose-gc ./build/esm/dist",
-    "test:cjs": "node --expose-gc ./build/cjs/dist",
+    "start": "node --expose-gc .",
     "monitor": "nodemon ."
   },
   "author": "FAR",
@@ -30,6 +19,7 @@
   "dependencies": {
     "streams-logger": "file:.."
   },
+  "type": "module",
   "devDependencies": {
     "@types/node": "^20.6.2",
     "typescript": "^5.1.6",
