@@ -1,6 +1,6 @@
 {
   "name": "streams-logger",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
   "main": "./build/cjs/dist/index.js",
   "type": "module",
