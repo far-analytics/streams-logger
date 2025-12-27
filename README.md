@@ -1,6 +1,6 @@
 # _Streams_ Logger
 
-Streams is an intuitive and performant logger for Node.js _and_ TypeScript applications.
+Streams is an intuitive and performant logger for Node.js and TypeScript applications.
 
 ## Introduction
 
