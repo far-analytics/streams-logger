@@ -5,7 +5,7 @@ import * as stream from "node:stream";
 import { once } from "node:events";
 import { LogContext } from "../commons/log_context.js";
 import { Node } from "../commons/node.js";
-import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
+import { SyslogLevel } from "../commons/syslog.js";
 import Config from "../commons/config.js";
 
 export const $rotate = Symbol("rotate");
@@ -82,7 +82,7 @@ export class RotatingFileHandlerTransform<MessageT> extends stream.Transform {
   }
 
   public _transform(
-    logContext: LogContext<MessageT, SyslogLevelT>,
+    logContext: LogContext<MessageT>,
     encoding: BufferEncoding,
     callback: stream.TransformCallback
   ): void {
@@ -173,7 +173,7 @@ export interface RotatingFileHandlerOptions {
 }
 
 export class RotatingFileHandler<MessageT = string> extends Node<
-  LogContext<MessageT, SyslogLevelT>,
+  LogContext<MessageT>,
   never,
   RotatingFileHandlerTransform<MessageT>
 > {

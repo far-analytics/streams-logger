@@ -1,7 +1,7 @@
 import * as net from "node:net";
 import * as stream from "node:stream";
 import { LogContext } from "../commons/log_context.js";
-import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
+import { SyslogLevel } from "../commons/syslog.js";
 import { Node } from "../commons/node.js";
 import Config from "../commons/config.js";
 
@@ -15,10 +15,7 @@ export interface SocketHandlerOptions {
   ingressQueueThreshold?: number;
 }
 
-export class SocketHandler<MessageT = string> extends Node<
-  LogContext<MessageT, SyslogLevelT>,
-  LogContext<MessageT, SyslogLevelT>
-> {
+export class SocketHandler<MessageT = string> extends Node<LogContext<MessageT>, LogContext<MessageT>> {
   public level: SyslogLevel;
 
   protected _space?: string | number;
@@ -50,11 +47,7 @@ export class SocketHandler<MessageT = string> extends Node<
           read: () => {
             this._push();
           },
-          write: (
-            logContext: LogContext<MessageT, SyslogLevelT>,
-            _encoding: BufferEncoding,
-            callback: stream.TransformCallback
-          ) => {
+          write: (logContext: LogContext<MessageT>, _encoding: BufferEncoding, callback: stream.TransformCallback) => {
             try {
               if (
                 this._socket.destroyed ||
@@ -170,12 +163,12 @@ export class SocketHandler<MessageT = string> extends Node<
     }
   };
 
-  protected _serializeMessage = (message: LogContext<MessageT, SyslogLevelT>): Buffer => {
+  protected _serializeMessage = (message: LogContext<MessageT>): Buffer => {
     return Buffer.from(JSON.stringify(message, this._replacer, this._space), "utf-8");
   };
 
-  protected _deserializeMessage = (data: Buffer): LogContext<MessageT, SyslogLevelT> => {
-    return new LogContext(JSON.parse(data.toString("utf-8"), this._reviver) as LogContext<MessageT, SyslogLevelT>);
+  protected _deserializeMessage = (data: Buffer): LogContext<MessageT> => {
+    return JSON.parse(data.toString("utf-8"), this._reviver) as LogContext<MessageT>;
   };
 
   public setLevel = (level: SyslogLevel): void => {

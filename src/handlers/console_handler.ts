@@ -2,7 +2,7 @@ import * as stream from "node:stream";
 import { once } from "node:events";
 import { Node } from "../commons/node.js";
 import { LogContext } from "../commons/log_context.js";
-import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
+import { SyslogLevel } from "../commons/syslog.js";
 import Config from "../commons/config.js";
 
 export const $level = Symbol("option");
@@ -21,7 +21,7 @@ export class ConsoleHandlerWritable<MessageT> extends stream.Writable {
   }
 
   public _write(
-    logContext: LogContext<MessageT, SyslogLevelT>,
+    logContext: LogContext<MessageT>,
     encoding: BufferEncoding,
     callback: (error?: Error | null) => void
   ): void {
@@ -73,7 +73,7 @@ export interface ConsoleHandlerOptions {
 }
 
 export class ConsoleHandler<MessageT = string> extends Node<
-  LogContext<MessageT, SyslogLevelT>,
+  LogContext<MessageT>,
   never,
   ConsoleHandlerWritable<MessageT>
 > {
