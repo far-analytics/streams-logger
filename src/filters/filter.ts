@@ -1,16 +1,15 @@
 import * as stream from "node:stream";
 import { LogContext } from "../commons/log_context.js";
 import { Node } from "../commons/node.js";
-import { SyslogLevelT } from "../commons/syslog.js";
 import Config from "../commons/config.js";
 
 export interface FilterOptions<MessageT> {
-  filter: (logContext: LogContext<MessageT, SyslogLevelT>) => Promise<boolean> | boolean;
+  filter: (logContext: LogContext<MessageT>) => Promise<boolean> | boolean;
 }
 
 export class Filter<MessageT = string> extends Node<
-  LogContext<MessageT, SyslogLevelT>,
-  LogContext<MessageT, SyslogLevelT>
+  LogContext<MessageT>,
+  LogContext<MessageT>
 > {
   constructor({ filter }: FilterOptions<MessageT>, streamOptions?: stream.TransformOptions) {
     super(
@@ -21,7 +20,7 @@ export class Filter<MessageT = string> extends Node<
           writableObjectMode: true,
           readableObjectMode: true,
           transform: (
-            logContext: LogContext<MessageT, SyslogLevelT>,
+            logContext: LogContext<MessageT>,
             encoding: BufferEncoding,
             callback: stream.TransformCallback
           ): void => {

@@ -7,6 +7,7 @@ import { Node } from "../commons/node.js";
 import { SyslogLevel, SyslogLevelT } from "../commons/syslog.js";
 import { KeysUppercase } from "../commons/types.js";
 import { QueueSizeLimitExceededError } from "../commons/errors.js";
+import { parseStackTrace } from "../commons/utils.js";
 
 export const $log = Symbol("log");
 
@@ -20,8 +21,8 @@ export interface BaseLoggerOptions<MessageT> {
 }
 
 export abstract class BaseLogger<MessageT = string> extends Node<
-  LogContext<MessageT, SyslogLevelT>,
-  LogContext<MessageT, SyslogLevelT>
+  LogContext<MessageT>,
+  LogContext<MessageT>
 > {
   public level: SyslogLevel;
   protected _name?: string;
@@ -56,7 +57,7 @@ export abstract class BaseLogger<MessageT = string> extends Node<
 
   protected [$log](message: MessageT, label: string | undefined, level: SyslogLevel): void {
     try {
-      const logContext = new LogContext<MessageT, SyslogLevelT>({
+      let logContext: LogContext<MessageT> = {
         message,
         name: this._name,
         level: SyslogLevel[level] as KeysUppercase<SyslogLevelT>,
@@ -65,11 +66,12 @@ export abstract class BaseLogger<MessageT = string> extends Node<
         threadid: threads.threadId,
         pid: process.pid,
         hostname: os.hostname(),
-      });
+      };
       if (this._captureStackTrace) {
-        logContext.capture = new Error();
-        Error.captureStackTrace(logContext.capture, this[$log]);
-        logContext.parseStackTrace();
+        const error = new Error();
+        Error.captureStackTrace(error, this[$log]);
+        logContext.stack = error.stack;
+        logContext = parseStackTrace(logContext);
       }
       super._write(logContext).catch((err: unknown) => {
         Config.errorHandler(err instanceof Error ? err : new Error(String(err)));

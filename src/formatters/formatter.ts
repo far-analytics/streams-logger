@@ -1,16 +1,15 @@
 import * as stream from "node:stream";
 import { LogContext } from "../commons/log_context.js";
 import { Node } from "../commons/node.js";
-import { SyslogLevelT } from "../commons/syslog.js";
 import Config from "../commons/config.js";
 
 export interface FormatterOptions<MessageInT, MessageOutT> {
-  format: (record: LogContext<MessageInT, SyslogLevelT>) => Promise<MessageOutT> | MessageOutT;
+  format: (record: LogContext<MessageInT>) => Promise<MessageOutT> | MessageOutT;
 }
 
 export class Formatter<MessageInT = string, MessageOutT = string> extends Node<
-  LogContext<MessageInT, SyslogLevelT>,
-  LogContext<MessageOutT, SyslogLevelT>
+  LogContext<MessageInT>,
+  LogContext<MessageOutT>
 > {
   constructor({ format }: FormatterOptions<MessageInT, MessageOutT>, streamOptions?: stream.TransformOptions) {
     super(
@@ -21,16 +20,13 @@ export class Formatter<MessageInT = string, MessageOutT = string> extends Node<
           writableObjectMode: true,
           readableObjectMode: true,
           transform: (
-            logContext: LogContext<MessageInT, SyslogLevelT>,
+            logContext: LogContext<MessageInT>,
             encoding: BufferEncoding,
             callback: stream.TransformCallback
           ) => {
             (async () => {
               const message = await format(logContext);
-              const logContextOut = new LogContext<MessageOutT, SyslogLevelT>({
-                ...logContext.toObject(),
-                ...{ message: message },
-              });
+              const logContextOut = { ...logContext, ...{ message: message } };
               callback(null, logContextOut);
             })().catch((err: unknown) => {
               const error = err instanceof Error ? err : new Error(String(err));
