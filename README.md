@@ -78,7 +78,7 @@ Create an instance of a Logger, Formatter, ConsoleHandler and RotatingFileHandle
 ```ts
 const logger = new Logger({ level: SyslogLevel.DEBUG });
 const formatter = new Formatter({
-  format: ({ isotime, message, name, level, func, url, line, col }) => {
+  format: ({ isotime, message, name, level, func, line, col }) => {
     return `${isotime}:${level}:${func}:${line}:${col}:${message}\n`;
   },
 });
@@ -135,7 +135,7 @@ Please see the [_Use **Streams** in a Node.js Project_](https://github.com/far-a
 
 ## Formatting
 
-You can format your log message using a `Formatter` Node. The `Logger` constructs a `LogContext` instance on each logged message. The [properties](#log-context-properties) of each `LogContext` contain information about the context of the logged message (e.g., module name, function name, line number, etc.). You can define a serialization function and pass it to the constructor of a `Formatter`. The serialization function can construct a log message from the `LogContext` [properties](#log-context-properties). In the concise [example](#example-formatter) below this is accomplished by using a [template literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
+You can format your log message using a `Formatter` Node. The `Logger` constructs a `LogContext` object on each logged message. The [properties](#log-context-properties) of each `LogContext` contain information about the context of the logged message (e.g., module name, function name, line number, etc.). You can define a serialization function and pass it to the constructor of a `Formatter`. The serialization function can construct a log message from the `LogContext` [properties](#log-context-properties). In the concise [example](#example-formatter) below this is accomplished by using a [template literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
 
 ### Log context properties
 
@@ -150,19 +150,13 @@ _Streams_ provides a rich selection of contextual information with each logging 
 | `label`    | Optional user specified label.                                                                                                                                                     |                          |
 | `level`    | The `SyslogLevel` of the logging call.                                                                                                                                             |                          |
 | `line`     | The line number of the logging call.                                                                                                                                               | `captureStackTrace=true` |
+| `location` | The location of the logging call (i.e., path).                                                                                                                                     | `captureStackTrace=true` |
 | `message`  | The message of the logging call.                                                                                                                                                   |                          |
 | `metadata` | Optional user specified data.                                                                                                                                                      |                          |
 | `name`     | The name of the logger.                                                                                                                                                            |                          |
-| `path`     | The module path.                                                                                                                                                                   | `captureStackTrace=true` |
-| `pathbase` | The module filename.                                                                                                                                                               | `captureStackTrace=true` |
-| `pathdir`  | The directory part of the module path.                                                                                                                                             | `captureStackTrace=true` |
-| `pathext`  | The extension of the module.                                                                                                                                                       | `captureStackTrace=true` |
-| `pathname` | The name of the module.                                                                                                                                                            | `captureStackTrace=true` |
-| `pathroot` | The root of the path.                                                                                                                                                              | `captureStackTrace=true` |
 | `pid`      | The process identifier.                                                                                                                                                            |                          |
 | `stack`    | The complete stack trace.                                                                                                                                                          | `captureStackTrace=true` |
 | `threadid` | The thread identifier.                                                                                                                                                             |                          |
-| `url`      | The URL of the module.                                                                                                                                                             | `captureStackTrace=true` |
 
 > **NB** For high throughput logging applications, you can improve performance by preventing some contextual information from being generated; you can set `Config.captureStackTrace` and `Config.captureISOTime` to `false`. Please see [Tuning](#tuning) for instructions on how to disable contextual information.
 
@@ -185,7 +179,7 @@ import { Logger, Formatter, ConsoleHandler, SyslogLevel } from "streams-logger";
 
 const logger = new Logger({ name: "main", level: SyslogLevel.DEBUG });
 const formatter = new Formatter({
-  format: ({ isotime, message, name, level, func, url, line, col }) => {
+  format: ({ isotime, message, name, level, func, line, col }) => {
     return `${isotime}:${level}:${func}:${line}:${col}:${message}\n`;
   },
 });
@@ -320,7 +314,7 @@ Set the log level. Must be one of `SyslogLevel`.
   - format `(record: LogContext<MessageInT, SyslogLevelT>): Promise<MessageOutT> | MessageOutT` A function that will format and serialize the `LogContext<MessageInT, SyslogLevelT>`. Please see [Formatting](#formatting) for how to implement a format function.
 - streamOptions `<stream.TransformOptions>` Optional options to be passed to the stream. You can use `TransformOptions` to set a `highWaterMark` on the `Formatter`.
 
-Use a `Formatter` in order to specify how your log message will be formatted prior to forwarding it to the Handler(s). An instance of [`LogContext`](#the-LogContext-class) is created that contains information about the environment at the time of the logging call. The `LogContext` is passed as the single argument to `format` function.
+Use a `Formatter` in order to specify how your log message will be formatted prior to forwarding it to the Handler(s). A [`LogContext`](#the-LogContext-interface) object is created that contains information about the environment at the time of the logging call. The `LogContext` is passed as the single argument to `format` function.
 
 _public_ **formatter.connect(...nodes)**
 
@@ -437,19 +431,14 @@ Returns `<void>`
 
 Set the log level. Must be one of `SyslogLevel`.
 
-### The LogContext class
+### The LogContext interface
 
-#### new streams-logger.LogContext\<MessageT, LevelT\>(options)
+#### streams-logger.LogContext\<MessageT, LevelT\>
 
 - `<MessageT>` The type of the logged message. **Default: `<string>`**
 - `<LevelT>` The type of the Level enum. **Default: `<SyslogLevelT>`**
-- options `<LogContextOptions>`
-  - message `<MessageT>` The logged message.
-  - name `<string>` The name of the `Logger`.
-  - level `<KeysUppercase<LevelT>>` An uppercase string representing the log level.
-  - stack `<string>` An optional stack trace.
 
-A `LogContext` is instantiated each time a message is logged at (or below) the level set on the `Logger`. It contains information about the process and environment at the time of the logging call. All _Streams_ `Node`s take a `LogContext` as an input and emit a `LogContext` as an output.
+A `LogContext` is a plain object created each time a message is logged at (or below) the level set on the `Logger`. It contains information about the process and environment at the time of the logging call. All _Streams_ `Node`s take a `LogContext` as an input and emit a `LogContext` as an output.
 
 The `LogContext` is passed as the single argument to the [format function](#formatting) of the `Formatter`; information about the environment can be extracted from the `LogContext` in order to format the logged message. The following properties will be available to the `format` function depending on the setting of `Config.captureStackTrace` and `Config.captureISOTime`. Please see the [Log Context Data](#log-context-data) table for details.
 
@@ -473,6 +462,11 @@ _public_ **logContext.isotime**
 - `<string>`
   The date and time in ISO format at the time of the logging call. Available if `Config.captureISOTime` is set to `true`.
 
+_public_ **logContext.label**
+
+- `<string>`
+  Optional user specified label.
+
 _public_ **logContext.level**
 
 - `<DEBUG | INFO | NOTICE | WARN | ERROR | CRIT | ALERT | EMERG>`
@@ -482,6 +476,11 @@ _public_ **logContext.line**
 
 - `<string>`
   The line number of the logging call. Available if `Config.captureStackTrace` is set to `true`.
+
+_public_ **logContext.location**
+
+- `<string>`
+  The location of the logging call. Available if `Config.captureStackTrace` is set to `true`.
 
 _public_ **logContext.message**
 
@@ -498,36 +497,6 @@ _public_ **logContext.name**
 - `<string>`
   The name of the `Logger`.
 
-_public_ **logContext.path**
-
-- `<string>`
-  The complete path of the module. Available if `Config.captureStackTrace` is set to `true`.
-
-_public_ **logContext.pathbase**
-
-- `<string>`
-  The module filename. Available if `Config.captureStackTrace` is set to `true`.
-
-_public_ **logContext.pathext**
-
-- `<string>`
-  The extension of the module. Available if `Config.captureStackTrace` is set to `true`.
-
-_public_ **logContext.pathdir**
-
-- `<string>`
-  The directory part of the module path. Available if `Config.captureStackTrace` is set to `true`.
-
-_public_ **logContext.pathname**
-
-- `<string>`
-  The name of the module. Available if `Config.captureStackTrace` is set to `true`.
-
-_public_ **logContext.pathroot**
-
-- `<string>`
-  The root of the path. Available if `Config.captureStackTrace` is set to `true`.
-
 _public_ **logContext.pid**
 
 - `<number>`
@@ -538,13 +507,10 @@ _public_ **logContext.threadid**
 - `<number>`
   The thread identifier.
 
-_public_ **logContext.parseStackTrace(depth)**
+_public_ **logContext.stack**
 
-- depth `<number>` An optional depth i.e., the number of newlines to skip.
-
-Returns `<void>`
-
-If the `LogContext.capture.stack` property has been set, parse the stack trace.
+- `<string>`
+  The complete stack trace. Available if `Config.captureStackTrace` is set to `true`.
 
 ### The _Streams_ Config settings object
 
