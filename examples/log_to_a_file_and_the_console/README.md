@@ -25,7 +25,7 @@ const consoleFormatter = new Formatter({
   format: ({ isotime, message, name, level }) => `${name}:${isotime}:${level}:${message}\n`,
 });
 const fileFortmatter = new Formatter({
-  format: ({ isotime, message, name, level, func, url, line, col }) =>
+  format: ({ isotime, message, name, level, func, line, col }) =>
     `${name}:${isotime}:${level}:${func}:${line}:${col}:${message}\n`,
 });
 const rotatingFileHandler = new RotatingFileHandler({
