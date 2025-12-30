@@ -406,9 +406,9 @@ await suite("Log a string that passes through a rotating file handler.", async (
   const log = logger.connect(formatter.connect(anyToAnyEmitter, rotatingFileHandler));
 
   await test("Log 1e5 messages to a `RotatingFileHandler` and assert rotation occurred and sizes respect MAX_SIZE.", async () => {
-    const promise = new Promise((r)=>{
+    const promise = new Promise((r) => {
       let counter = 0;
-      anyToAnyEmitter.emitter.on("data", ()=>{
+      anyToAnyEmitter.emitter.on("data", () => {
         counter = counter + 1;
         if (counter == 1e5) {
           r(null);
