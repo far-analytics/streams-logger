@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Logger, Formatter, ConsoleHandler, SyslogLevel } from "streams-logger";
 
 const logger = new Logger({ name: "hello-logger", level: SyslogLevel.DEBUG });
