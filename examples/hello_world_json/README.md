@@ -1,8 +1,8 @@
-# _An Instance of JSON "Hello, World!"_
+# _An Instance of Logging a Serialized JSON Object "Hello, World!" Message_
 
 ## Introduction
 
-In this example you will use Streams in order to log "Hello, World!" to the console as a stringified JSON object.
+In this example you will use Streams in order to log "Hello, World!" to the console as a serialized JSON object.
 
 ## Implement the example
 
