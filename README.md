@@ -13,6 +13,7 @@ _Streams_ is an intuitive logger built on native Node.js streams. You can use th
 - **A _zero-dependency_ logging framework based on native Node.js streams.**
 - A library of commonly used logging components: [Logger](#the-logger-class), [Formatter](#the-formatter-class), [Filter](#the-filter-class), [ConsoleHandler](#the-consolehandler-class), [RotatingFileHandler](#the-rotatingfilehandler-class), and [SocketHandler](#the-sockethandler-class).
 - A rich selection of [contextual data](#log-context-properties) (e.g., module name, function name, line number, etc.) for augmenting log messages.
+- Log your message in any format you choose including [JSON](#an-instance-of-json-hello-world-typescript) and [colorized](#an-instance-of-colorized-hello-world-typescript) output formats.
 - A type-safe graph-like API pattern for constructing sophisticated [logging graphs](#graph-api-pattern).
 - Consume any native Node.js Readable, Writable, Duplex, or Transform stream and add it to your graph.
 - Error handling and selective detachment of inoperable graph components.
