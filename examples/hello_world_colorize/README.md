@@ -17,7 +17,7 @@ import chalk from "chalk"; // https://www.npmjs.com/package/chalk
 
 #### Create an instance of a Logger, Formatter, and ConsoleHandler.
 
-The external library [Chalk](https://www.npmjs.com/package/chalk) is used in order to add color each component of the log message.
+The external library [Chalk](https://www.npmjs.com/package/chalk) is used in order to add color to each component of the log message.
 
 ```ts
 const logger = new Logger({ name: "hello-logger", level: SyslogLevel.DEBUG });
