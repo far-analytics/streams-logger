@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this example you will use Streams in order to log "Hello, World!" to the console.
+In this example you will use Streams in order to log "Hello, World!" to the console and colorize the log message using the external library [Chalk](https://www.npmjs.com/package/chalk).
 
 ## Implement the example
 
