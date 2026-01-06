@@ -118,7 +118,7 @@ Output
 
 - If you prefer a colorized log message, please see the ["An Instance of Colorize "Hello, World!"](https://github.com/far-analytics/streams-logger/tree/main/examples/hello_world_colorize) example that demonstrates how to log to the console using the external library [Chalk](https://www.npmjs.com/package/chalk).
 
-- If you prefer a JSON format, please see the ["An Instance of JSON "Hello, World!"](https://github.com/far-analytics/streams-logger/tree/main/examples/hello_world_json) example that demonstrates how to log to the console as JSON.
+- If you prefer a JSON format, please see the ["An Instance of JSON "Hello, World!"](https://github.com/far-analytics/streams-logger/tree/main/examples/hello_world_json) example that demonstrates how to log to the console as stringified JSON object.
 
 ## Examples
 
