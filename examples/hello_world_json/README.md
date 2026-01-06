@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this example you will use Streams in order to log "Hello, World!" to the console as a JSON object.
+In this example you will use Streams in order to log "Hello, World!" to the console as a stringified JSON object.
 
 ## Implement the example
 
