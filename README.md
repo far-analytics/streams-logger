@@ -121,51 +121,58 @@ Output
 ## Examples
 
 ### _"Hello, World!"_
+
 - TypeScript
 
 Please see the [Usage](#usage) section above or the [_Hello, World!_](https://github.com/far-analytics/streams-logger/tree/main/examples/hello_world) example for a working implementation.
 
 ### _Use **Streams** in a Node.js project (without type safety)_
+
 - Node.js
 
 Please see the [_Use **Streams** in a Node.js Project_](https://github.com/far-analytics/streams-logger/tree/main/examples/use_streams_in_a_nodejs_project) example that demonstrates how to use _Streams_ in a Node.js project _without_ type checks.
 
-
 ### _Log a colorized "Hello, World!" message_
+
 - TypeScript
 
 Please see the [_Log a Colorized "Hello, World!" Message_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_colorized_hello_world_message) example that demonstrates how to log to the console using the external library [Chalk](https://www.npmjs.com/package/chalk).
 
 ### _Log a JSON object_
+
 - TypeScript
 
-Please see the [_Log a JSON Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_json_object) example that demonstrates how to log a serialized JSON object to the console. 
+Please see the [_Log a JSON Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_json_object) example that demonstrates how to log a serialized JSON object to the console.
 
 ### _Log a JavaScript object_
+
 - TypeScript
 
-Please see the [_Log a JavaScript Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_javascript_object) example that demonstrates how to log an object to the console. 
+Please see the [_Log a JavaScript Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_javascript_object) example that demonstrates how to log an object to the console.
 
 ### _Log to a file and the console_
+
 - TypeScript
 
-Please see the [_Log to a File and the Console_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_to_a_file_and_the_console) example that demonstrates how to log to a file and the console using different `Formatters`. 
+Please see the [_Log to a File and the Console_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_to_a_file_and_the_console) example that demonstrates how to log to a file and the console using different `Formatters`.
 
 ### _A network connected streams logging graph_
+
 - TypeScript
 
-Please see the [_A Network Connected **Streams** Logging Graph_](https://github.com/far-analytics/streams-logger/tree/main/examples/a_network_connected_logging_graph) example that demonstrates how to connect _Streams_ logging graphs over the network. 
-
+Please see the [_A Network Connected **Streams** Logging Graph_](https://github.com/far-analytics/streams-logger/tree/main/examples/a_network_connected_logging_graph) example that demonstrates how to connect _Streams_ logging graphs over the network.
 
 ### _Implement a transform_
+
 - TypeScript
 
 Please see the [_Implement a Transform_](https://github.com/far-analytics/streams-logger/tree/main/examples/implement_a_transform) example that demonstrates how to implement a custom _Streams_ `Node`.
 
 ### _Consume a socket_
+
 - TypeScript
 
-Please see the [_Consume a Socket_](https://github.com/far-analytics/streams-logger/tree/main/examples/consume_a_socket) example that demonstrates how to wrap a `net.Socket` in a _Streams_ `Node`. 
+Please see the [_Consume a Socket_](https://github.com/far-analytics/streams-logger/tree/main/examples/consume_a_socket) example that demonstrates how to wrap a `net.Socket` in a _Streams_ `Node`.
 
 ## Formatting
 
@@ -632,7 +639,7 @@ Alternatively, _Streams_ also provides a single instance root `Logger` (`streams
 
 ### How to implement a custom _Streams_ data transformation node
 
-_Streams_ is built on a type-safe graph API framework. Each component of a _Streams_ logging graph _is a_ `Node` instance.This means that any `Node` may be incorporated into your logging graph provided that it meets the contextual type requirements. In order to implement a _Streams_ data transformation `Node`, subclass the `Node` class, and provide the appropriate _Streams_ defaults to the stream constructor.
+_Streams_ is built on a type-safe graph API framework. Each component of a _Streams_ logging graph _is a_ `Node` instance. This means that any `Node` may be incorporated into your logging graph provided that it meets the contextual type requirements. In order to implement a _Streams_ data transformation `Node`, subclass the `Node` class, and provide the appropriate _Streams_ defaults to the stream constructor.
 
 For example, the somewhat contrived `LogContextToBuffer` implementation transforms the `message` contained in a `LogContext` to a `Buffer`; the graph pipeline streams the message to `process.stdout`.
 
