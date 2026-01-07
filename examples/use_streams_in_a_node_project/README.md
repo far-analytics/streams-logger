@@ -6,7 +6,7 @@ In the other examples, _Streams_ is demonstrated in TypeScript projects. However
 
 ## Implement the example
 
-### Implement the `index.ts` module
+### Implement the `index.js` module
 
 ```ts
 const { Logger, Formatter, ConsoleHandler, SyslogLevel, RotatingFileHandler } = require("streams-logger");
