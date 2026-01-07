@@ -142,7 +142,7 @@ Please see the [_Log to a File and the Console_](https://github.com/far-analytic
 
 ### _A network connected streams logging graph_ <sup><sup>\</TypeScript\></sup></sup>
 
-Please see the [_Network Connected **Streams** Logging Graph_](https://github.com/far-analytics/streams-logger/tree/main/examples/network_connected_logging_graph) example that demonstrates how to connect _Streams_ logging graphs over the network.
+Please see the [_A Network Connected **Streams** Logging Graph_](https://github.com/far-analytics/streams-logger/tree/main/examples/a_network_connected_logging_graph) example that demonstrates how to connect _Streams_ logging graphs over the network.
 
 ### _Use **Streams** in a Node.js project (without type safety)_ <sup><sup>\</Node.js\></sup></sup>
 
