@@ -1,8 +1,8 @@
-# _An Instance of Logging a Serialized JSON Object "Hello, World!" Message_
+# _Log a JSON Object_
 
 ## Introduction
 
-In this example you will use Streams in order to log "Hello, World!" to the console as a serialized JSON object.
+In this example you will use Streams in order to log "Hello, World!" message to the console as a property of a JSON object.
 
 ## Implement the example
 
@@ -97,7 +97,7 @@ npm start
 
 ##### Output
 
-```bash
+```
 {"name":"hello-logger","isotime":"2026-01-06T23:00:05.777Z","level":"INFO","func":"sayHello","line":"11","col":"9","message":"Hello, World!"}
 {"name":"hello-logger","isotime":"2026-01-06T23:00:05.779Z","level":"INFO","func":"Greeter.speak","line":"19","col":"13","message":"Hello, World!"}
 {"name":"hello-logger","isotime":"2026-01-06T23:00:08.779Z","level":"INFO","func":"Timeout.sayHello","line":"11","col":"9","message":"Hello, World!"}

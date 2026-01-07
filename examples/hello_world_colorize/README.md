@@ -1,4 +1,4 @@
-# _An Instance of Logging a Colorized "Hello, World!" Message_
+# _Log a Colorized "Hello, World!" Message_
 
 ## Introduction
 

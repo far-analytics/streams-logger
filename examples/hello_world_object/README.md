@@ -1,8 +1,8 @@
-# _An Instance of Object "Hello, World!"_
+# _Log a JavaScript Object_
 
 ## Introduction
 
-In this example you will use Streams in order to log "Hello, World!" to the console as an object.
+In this example you will use Streams in order to log "Hello, World!" message to the console as a property of a JavaScript object.
 
 ## Implement the example
 
@@ -96,7 +96,7 @@ npm start
 
 ##### Output
 
-```bash
+```
 {"name":"hello-logger","isotime":"2026-01-06T23:04:45.338Z","level":"INFO","func":"sayHello","line":"11","col":"9","message":"Hello, World!"}{"name":"hello-logger","isotime":"2026-01-06T23:04:45.340Z","level":"INFO","func":"Greeter.speak","line":"19","col":"13","message":"Hello, World!"}{"name":"hello-logger","isotime":"2026-01-06T23:04:48.342Z","level":"INFO","func":"Timeout.sayHello","line":"11","col":"9","message":"Hello, World!"}
 ...
 ```
