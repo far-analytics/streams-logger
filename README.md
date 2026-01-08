@@ -116,7 +116,7 @@ Output
 
 - If you prefer a colorized log message, please see the [_Log a Colorized "Hello, World!" Message_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_colorized_hello_world_message) example that demonstrates how to log a colorized message to the console using the external library [Chalk](https://www.npmjs.com/package/chalk).
 
-- If you prefer a JSON format, please see the [_Log a JSON Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/hello_world_json) example that demonstrates how to log a serialized JSON object to the console.
+- If you prefer a JSON format, please see the [_Log a JSON Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/hello_world_json) example that demonstrates how to log a JSON object to the console.
 
 ## Examples
 
@@ -142,7 +142,7 @@ Please see the [_Log a Colorized "Hello, World!" Message_](https://github.com/fa
 
 - TypeScript
 
-Please see the [_Log a JSON Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_json_object) example that demonstrates how to log a serialized JSON object to the console.
+Please see the [_Log a JSON Object_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_json_object) example that demonstrates how to log a JSON object to the console.
 
 ### _Log a JavaScript object_
 
