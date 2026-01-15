@@ -108,10 +108,10 @@ sayHello();
 
 Output
 
-```bash
-# ⮶date-time    function name⮷   column⮷ ⮶message
+```
+⮶date-time      function name⮷   column⮷ ⮶message
 2024-06-12T00:10:15.894Z:INFO:sayHello:7:9:Hello, World!
-#                        ⮴level       ⮴line number
+                         ⮴level       ⮴line number
 ```
 
 - If you prefer a colorized log message, please see the [_Log a Colorized "Hello, World!" Message_](https://github.com/far-analytics/streams-logger/tree/main/examples/log_a_colorized_hello_world_message) example that demonstrates how to log a colorized message to the console using the external library [Chalk](https://www.npmjs.com/package/chalk).
@@ -237,10 +237,10 @@ sayHello();
 
 This is an example of what a logged message will look like using the `Formatter` defined above.
 
-```bash
-# ⮶date-time    function name⮷   column⮷ ⮶message
+```
+⮶date-time      function name⮷   column⮷ ⮶message
 2024-06-12T00:10:15.894Z:INFO:sayHello:7:9:Hello, World!
-#                        ⮴level       ⮴line number
+                         ⮴level       ⮴line number
 ```
 
 ## API
