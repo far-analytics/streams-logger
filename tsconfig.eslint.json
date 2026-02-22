@@ -6,13 +6,5 @@
     "checkJs": true,
     "module": "node16",
     "strict": true
-  },
-  "include": [
-    "src/**/*.ts",
-    "examples/**/*.ts",
-    "examples/**/*.js",
-    "test/**/*.ts",
-    "test/**/*.js",
-    "eslint.config.mjs"
-  ]
+  }
 }
